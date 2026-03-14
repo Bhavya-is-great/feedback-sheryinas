@@ -1,0 +1,46 @@
+@font-face {
+  font-family: neue;
+  src: url(../assets/fonts/NeueMachina-Light.woff2);
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: neue;
+  src: url(../assets/fonts/NeueMachina-Regular.woff2);
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: manrope;
+  src: url(../assets/fonts/Manrope-VariableFont_wght.woff2);
+}
+
+:root {
+  --primary: #e35927;
+  --secondary: #000000;
+  --accent: #fff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  font-family: manrope;
+}
+
+body {
+  overflow: auto;
+  overflow-x: hidden;
+  background: var(--secondary);
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}

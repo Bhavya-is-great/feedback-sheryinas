@@ -1,0 +1,281 @@
+.nav {
+    position: sticky;
+    top: 1rem;
+    z-index: 30;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 1.5rem 1.5rem;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    background: rgba(7, 7, 7, 0.72);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0;
+}
+
+.img {
+    width: 7.5rem;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.28));
+}
+
+.brandCopy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    text-decoration: none;
+    align-items: flex-end;
+    flex-shrink: 0;
+}
+
+.brandTitle {
+    color: var(--accent);
+    font-family: neue;
+    font-size: 1.45rem;
+    line-height: 1;
+    overflow: hidden;
+}
+
+.brandTag {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+}
+
+.centerNav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.pages {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.45rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 6.5rem;
+    padding: 0.8rem 1.1rem;
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.76);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.textSwap {
+    --swap-height: 1.1em;
+    display: inline-flex;
+    height: var(--swap-height);
+    overflow: hidden;
+    align-items: flex-start;
+}
+
+.brandSwap {
+    --swap-height: 1.02em;
+}
+
+.navSwap {
+    --swap-height: 1.08em;
+}
+
+.textTrack {
+    display: flex;
+    flex-direction: column;
+    transform: translate3d(0, 0, 0);
+    transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+}
+
+.swapItem {
+    display: flex;
+    align-items: center;
+    height: var(--swap-height);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.brandCopy:hover .textTrack,
+.link:hover .textTrack {
+    transform: translate3d(0, calc(-1 * var(--swap-height)), 0);
+}
+
+.link:hover {
+    color: var(--accent);
+    background: rgba(227, 89, 39, 0.16);
+    transform: translateY(-1px);
+}
+
+.hamburger {
+    display: none;
+    position: relative;
+    z-index: 40;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.line {
+    display: inline-block;
+    width: 18px;
+    height: 2px;
+    background: var(--accent);
+    transition: all 0.3s ease;
+}
+
+.hamburger.active .line:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.hamburger.active .line:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active .line:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+}
+
+.mobilePanel {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .nav {
+        top: 0.75rem;
+        margin: 0.75rem 0.75rem 1.1rem;
+        padding: 0.85rem 0.95rem;
+    }
+
+    .centerNav {
+        display: none;
+    }
+
+    .brandCopy {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .mobilePanel {
+        position: fixed;
+        top: 5.15rem;
+        left: 0.75rem;
+        right: 0.75rem;
+        z-index: 35;
+        display: block;
+        padding: 0.7rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1.4rem;
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+            rgba(8, 8, 8, 0.95);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+        transform: translateY(-0.75rem);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.28s ease, opacity 0.28s ease;
+    }
+
+    .mobilePanel.active {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .mobilePages {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0;
+    }
+
+    .mobileLink {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.1rem;
+        border-radius: 1.1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--accent);
+        text-decoration: none;
+        font-family: neue;
+        font-size: 1.35rem;
+        line-height: 1;
+    }
+
+    .mobileArrow {
+        color: var(--primary);
+        font-family: neue;
+        font-size: 1rem;
+    }
+
+    .img {
+        width: 6.4rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .nav {
+        top: 0.65rem;
+        margin: 0.65rem 0.65rem 1rem;
+        padding: 0.75rem 0.85rem;
+    }
+
+    .brandTitle {
+        font-size: 1.2rem;
+    }
+
+    .brandTag {
+        font-size: 0.68rem;
+    }
+
+    .img {
+        width: 5.5rem;
+    }
+
+    .mobilePanel {
+        top: 4.75rem;
+        left: 0.65rem;
+        right: 0.65rem;
+    }
+}
