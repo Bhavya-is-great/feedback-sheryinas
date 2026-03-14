@@ -1,0 +1,26 @@
+.section {
+  min-height: 100%;
+  padding: 1.4rem;
+  border-radius: 1.75rem;
+  background: rgba(10, 10, 10, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.head {
+  margin-bottom: 1.2rem;
+}
+
+.title {
+  margin-bottom: 0.4rem;
+  font-family: neue;
+  font-size: 1.7rem;
+}
+
+.description {
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.5;
+}
+
+.body {
+  height: calc(100% - 4rem);
+}

@@ -1,14 +1,11 @@
-import React from 'react';
-import Navbar from '@/components/globals/Navbar';
-import Feedbacks from '@/components/home/Feedbacks';
+import Navbar from "@/components/globals/Navbar";
+import Feedbacks from "@/components/home/Feedbacks";
 
-const page = () => {
+export default function HomePage() {
   return (
     <main>
       <Navbar />
       <Feedbacks />
     </main>
-  )
+  );
 }
-
-export default page

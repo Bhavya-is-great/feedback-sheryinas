@@ -60,7 +60,7 @@ const Navbar = () => {
             <span className={`${styles.textSwap} ${styles.brandSwap}`}>
               <span className={styles.textTrack}>
                 <span className={styles.swapItem}>Kodex</span>
-                <span className={styles.swapItem}>Boot Camp</span>
+                <span className={styles.swapItem}>BootCamp </span>
               </span>
             </span>
           </span>
