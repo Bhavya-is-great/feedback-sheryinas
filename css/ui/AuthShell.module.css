@@ -1,0 +1,65 @@
+.page {
+  min-height: 100svh;
+  padding: 2rem;
+  background:
+    radial-gradient(circle at top left, rgba(227, 89, 39, 0.18), transparent 20rem),
+    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.08), transparent 22rem),
+    #070707;
+  color: var(--accent);
+}
+
+.shell {
+  width: min(1040px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.copy {
+  padding: 2rem 0;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(227, 89, 39, 0.12);
+  border: 1px solid rgba(227, 89, 39, 0.28);
+  color: #ffd9cb;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.8rem;
+}
+
+.title {
+  margin: 1rem 0 0.8rem;
+  font-family: neue;
+  font-size: clamp(2.5rem, 6vw, 4.8rem);
+  line-height: 0.95;
+}
+
+.description {
+  max-width: 34rem;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.7;
+}
+
+.card {
+  padding: 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.6rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding: 1rem;
+  }
+
+  .shell {
+    grid-template-columns: 1fr;
+  }
+}

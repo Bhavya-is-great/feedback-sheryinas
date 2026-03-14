@@ -1,20 +1,15 @@
-import { NextResponse } from "next/server";
 import { createFeedbackController } from "@/controllers/feedback.controller";
-import { isMainPasswordValid } from "@/utils/adminAuth";
 import { createErrorResponse, createSuccessResponse } from "@/utils/api.util";
+import { requireApiSession } from "@/utils/routeAuth.util";
 
 export async function POST(request) {
   try {
-    const adminPassword = request.headers.get("x-admin-password");
+    const { errorResponse } = await requireApiSession(request, {
+      adminOnly: true,
+    });
 
-    if (!isMainPasswordValid(adminPassword)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Unauthorized admin access.",
-        },
-        { status: 401 }
-      );
+    if (errorResponse) {
+      return errorResponse;
     }
 
     const body = await request.json();

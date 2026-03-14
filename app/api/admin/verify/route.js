@@ -1,29 +1,25 @@
 import { NextResponse } from "next/server";
-import { isMainPasswordValid } from "@/utils/adminAuth";
+import { requireApiSession } from "@/utils/routeAuth.util";
 
 export async function POST(request) {
   try {
-    const { password } = await request.json();
+    const { errorResponse } = await requireApiSession(request, {
+      adminOnly: true,
+    });
 
-    if (!isMainPasswordValid(password)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid admin password.",
-        },
-        { status: 401 }
-      );
+    if (errorResponse) {
+      return errorResponse;
     }
 
     return NextResponse.json({
       success: true,
-      message: "Admin unlocked.",
+      message: "Admin verified.",
     });
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message || "Failed to verify admin password.",
+        message: error.message || "Failed to verify admin access.",
       },
       { status: 500 }
     );
