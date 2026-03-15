@@ -12,15 +12,16 @@ export function getWelcomeEmailTemplate({ name }) {
   };
 }
 
-export function getOwnerSignupTemplate({ name, email }) {
+export function getEmailOtpTemplate({ name, otp }) {
   return {
-    subject: "New signup on Kodex Feedback",
-    text: `${name} (${email}) just created an account.`,
+    subject: "Your Kodex Feedback verification code",
+    text: `Hi ${name}, use this verification code to finish your signup: ${otp}. This code expires in 1 hour.`,
     html: `
       <div style="font-family:Arial,sans-serif;padding:24px;background:#0b0b0b;color:#f5f0ea;">
-        <h1 style="margin:0 0 12px;color:#e35927;">New account created</h1>
-        <p style="margin:0 0 8px;"><strong>Name:</strong> ${name}</p>
-        <p style="margin:0;"><strong>Email:</strong> ${email}</p>
+        <h1 style="margin:0 0 12px;color:#e35927;">Verify your email</h1>
+        <p style="margin:0 0 12px;">Hi ${name}, use this code to verify your account.</p>
+        <p style="margin:0 0 12px;font-size:32px;font-weight:700;letter-spacing:8px;">${otp}</p>
+        <p style="margin:0;">This code expires in 1 hour.</p>
       </div>
     `,
   };

@@ -1,4 +1,6 @@
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const STRONG_PASSWORD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
 export function normalizeEmail(email) {
   return String(email || "").trim().toLowerCase();
@@ -23,6 +25,7 @@ export function getPublicUser(user) {
     name: user.name,
     email: user.email,
     role: user.role,
+    isVerified: user.isVerified,
     createdAt: user.createdAt,
   };
 }
@@ -47,6 +50,10 @@ export function validateSignupPayload(payload = {}) {
 
   if (password.length < 8) {
     return "Password must be at least 8 characters long.";
+  }
+
+  if (!STRONG_PASSWORD_REGEX.test(password)) {
+    return "Password must include at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.";
   }
 
   if (password !== confirmPassword) {
@@ -100,6 +107,25 @@ export function validateResetPasswordPayload(payload = {}) {
 
   if (password !== confirmPassword) {
     return "Password and confirm password must match.";
+  }
+
+  return null;
+}
+
+export function validateVerifyOtpPayload(payload = {}) {
+  const email = normalizeEmail(payload.email);
+  const otp = String(payload.otp || "").trim();
+
+  if (!email || !otp) {
+    return "email and otp are required.";
+  }
+
+  if (!EMAIL_REGEX.test(email)) {
+    return "Please enter a valid email address.";
+  }
+
+  if (!/^\d{6}$/.test(otp)) {
+    return "OTP must be a 6-digit code.";
   }
 
   return null;

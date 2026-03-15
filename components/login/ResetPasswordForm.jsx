@@ -3,17 +3,16 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useToast } from "@/components/ui/ToastProvider";
 import http from "@/utils/http.util";
 import AuthButton from "@/components/ui/AuthButton";
 import AuthField from "@/components/ui/AuthField";
-import AuthMessage from "@/components/ui/AuthMessage";
 import styles from "@/css/login/ResetPasswordForm.module.css";
 
 export default function ResetPasswordForm({ token }) {
   const router = useRouter();
+  const toast = useToast();
   const [form, setForm] = useState({ password: "", confirmPassword: "" });
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(event) {
@@ -24,12 +23,10 @@ export default function ResetPasswordForm({ token }) {
   async function handleSubmit(event) {
     event.preventDefault();
     if (!token) {
-      setError("This reset link is invalid or missing.");
+      toast.error("This reset link is invalid or missing.");
       return;
     }
 
-    setError("");
-    setSuccess("");
     setIsSubmitting(true);
 
     try {
@@ -42,11 +39,11 @@ export default function ResetPasswordForm({ token }) {
         throw new Error(data.message || "Unable to reset password.");
       }
 
-      setSuccess(data.message);
+      toast.success(data.message);
       router.replace("/");
       router.refresh();
     } catch (submitError) {
-      setError(submitError.response?.data?.message || submitError.message);
+      toast.error(submitError.response?.data?.message || submitError.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -74,8 +71,6 @@ export default function ResetPasswordForm({ token }) {
         autoComplete="new-password"
         disabled={isSubmitting}
       />
-      <AuthMessage>{error}</AuthMessage>
-      <AuthMessage tone="success">{success}</AuthMessage>
       <AuthButton type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Saving..." : "Reset Password"}
       </AuthButton>

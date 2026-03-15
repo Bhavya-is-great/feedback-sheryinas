@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import SignupForm from "@/components/signup/SignupForm";
 import AuthShell from "@/components/ui/AuthShell";
+import { getCurrentPendingVerification } from "@/utils/pendingVerification.util";
 import { getCurrentSession } from "@/utils/session.util";
 
 export const metadata = {
@@ -10,9 +11,14 @@ export const metadata = {
 
 export default async function SignupPage() {
   const session = await getCurrentSession();
+  const pendingVerification = await getCurrentPendingVerification();
 
   if (session) {
     redirect("/");
+  }
+
+  if (pendingVerification) {
+    redirect("/verify-otp");
   }
 
   return (

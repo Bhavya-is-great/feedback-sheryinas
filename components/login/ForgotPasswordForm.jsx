@@ -2,22 +2,19 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useToast } from "@/components/ui/ToastProvider";
 import http from "@/utils/http.util";
 import AuthButton from "@/components/ui/AuthButton";
 import AuthField from "@/components/ui/AuthField";
-import AuthMessage from "@/components/ui/AuthMessage";
 import styles from "@/css/login/ForgotPasswordForm.module.css";
 
 export default function ForgotPasswordForm() {
+  const toast = useToast();
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setError("");
-    setSuccess("");
     setIsSubmitting(true);
 
     try {
@@ -27,10 +24,10 @@ export default function ForgotPasswordForm() {
         throw new Error(data.message || "Unable to send reset link.");
       }
 
-      setSuccess(data.message);
+      toast.success(data.message);
       setEmail("");
     } catch (submitError) {
-      setError(submitError.response?.data?.message || submitError.message);
+      toast.error(submitError.response?.data?.message || submitError.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -48,8 +45,6 @@ export default function ForgotPasswordForm() {
         autoComplete="email"
         disabled={isSubmitting}
       />
-      <AuthMessage>{error}</AuthMessage>
-      <AuthMessage tone="success">{success}</AuthMessage>
       <AuthButton type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Sending..." : "Send Magic Link"}
       </AuthButton>

@@ -3,21 +3,21 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useToast } from "@/components/ui/ToastProvider";
 import http from "@/utils/http.util";
 import AuthButton from "@/components/ui/AuthButton";
 import AuthField from "@/components/ui/AuthField";
-import AuthMessage from "@/components/ui/AuthMessage";
 import styles from "@/css/signup/SignupForm.module.css";
 
 export default function SignupForm() {
   const router = useRouter();
+  const toast = useToast();
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(event) {
@@ -27,7 +27,6 @@ export default function SignupForm() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setError("");
     setIsSubmitting(true);
 
     try {
@@ -37,10 +36,11 @@ export default function SignupForm() {
         throw new Error(data.message || "Unable to create account.");
       }
 
-      router.replace("/");
+      toast.success(data.message || "Verification code sent.");
+      router.replace("/verify-otp");
       router.refresh();
     } catch (submitError) {
-      setError(submitError.response?.data?.message || submitError.message);
+      toast.error(submitError.response?.data?.message || submitError.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -73,7 +73,7 @@ export default function SignupForm() {
         type="password"
         value={form.password}
         onChange={handleChange}
-        placeholder="Minimum 8 characters"
+        placeholder="8+ chars, Aa1@ required"
         autoComplete="new-password"
         disabled={isSubmitting}
       />
@@ -87,7 +87,6 @@ export default function SignupForm() {
         autoComplete="new-password"
         disabled={isSubmitting}
       />
-      <AuthMessage>{error}</AuthMessage>
       <AuthButton type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Creating..." : "Create Account"}
       </AuthButton>

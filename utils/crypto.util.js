@@ -4,6 +4,11 @@ export function createOpaqueToken(size = 32) {
   return randomBytes(size).toString("hex");
 }
 
+export function createNumericOtp(length = 6) {
+  const max = 10 ** length;
+  return String(Math.floor(Math.random() * max)).padStart(length, "0");
+}
+
 export function hashToken(token) {
   return createHash("sha256").update(token).digest("hex");
 }

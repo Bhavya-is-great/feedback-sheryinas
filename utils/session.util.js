@@ -53,6 +53,22 @@ export function clearSessionCookie(response) {
   });
 }
 
+export async function setSessionCookie(session) {
+  const cookieStore = await cookies();
+  cookieStore.set({
+    ...getSessionCookieOptions(session.expiresAt),
+    value: session.token,
+  });
+}
+
+export async function removeSessionCookie() {
+  const cookieStore = await cookies();
+  cookieStore.set({
+    ...getSessionCookieOptions(new Date(0)),
+    value: "",
+  });
+}
+
 export async function deleteSessionByToken(token) {
   if (!token) {
     return;

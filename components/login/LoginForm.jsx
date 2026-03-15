@@ -3,16 +3,16 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useToast } from "@/components/ui/ToastProvider";
 import http from "@/utils/http.util";
 import AuthButton from "@/components/ui/AuthButton";
 import AuthField from "@/components/ui/AuthField";
-import AuthMessage from "@/components/ui/AuthMessage";
 import styles from "@/css/login/LoginForm.module.css";
 
 export default function LoginForm() {
   const router = useRouter();
+  const toast = useToast();
   const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(event) {
@@ -22,7 +22,6 @@ export default function LoginForm() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setError("");
     setIsSubmitting(true);
 
     try {
@@ -32,10 +31,21 @@ export default function LoginForm() {
         throw new Error(data.message || "Unable to log in.");
       }
 
+      toast.success(data.message || "Logged in successfully.");
       router.replace("/");
       router.refresh();
     } catch (submitError) {
-      setError(submitError.response?.data?.message || submitError.message);
+      const responseData = submitError.response?.data;
+      const message = responseData?.message || submitError.message;
+
+      if (responseData?.data?.requiresOtpVerification) {
+        toast.info(message);
+        router.replace("/verify-otp");
+        router.refresh();
+        return;
+      }
+
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -63,7 +73,6 @@ export default function LoginForm() {
         autoComplete="current-password"
         disabled={isSubmitting}
       />
-      <AuthMessage>{error}</AuthMessage>
       <AuthButton type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Logging in..." : "Log In"}
       </AuthButton>

@@ -1,16 +1,11 @@
-import { signupController } from "@/controllers/auth.controller";
+import { resendOtpController } from "@/controllers/auth.controller";
 import { createErrorResponse, createSuccessResponse } from "@/utils/api.util";
 import { setPendingVerificationCookie } from "@/utils/pendingVerification.util";
-import { setSessionCookie } from "@/utils/session.util";
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const result = await signupController(body);
-
-    if (result.session) {
-      await setSessionCookie(result.session);
-    }
+    const result = await resendOtpController(body);
 
     if (result.pendingVerification) {
       await setPendingVerificationCookie(result.pendingVerification);
@@ -18,6 +13,6 @@ export async function POST(request) {
 
     return createSuccessResponse(result);
   } catch (error) {
-    return createErrorResponse(error, "Failed to create account.");
+    return createErrorResponse(error, "Failed to resend OTP.");
   }
 }
