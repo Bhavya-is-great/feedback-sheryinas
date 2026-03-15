@@ -1,5 +1,6 @@
 import { connectDB } from "@/config/db.congif";
 import Feedback from "@/models/feedbackModel";
+import ExpressError from "@/utils/Expresserror.util";
 import {
   buildCreateFeedbackPayload,
   sortFeedbacksByDateStartDesc,
@@ -10,11 +11,7 @@ export async function createFeedbackController(payload) {
   const validationError = validateFeedbackPayload(payload);
 
   if (validationError) {
-    return {
-      success: false,
-      status: 400,
-      message: validationError,
-    };
+    throw new ExpressError(400, validationError);
   }
 
   await connectDB();

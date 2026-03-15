@@ -5,6 +5,7 @@ import Session from "@/models/sessionModel";
 import User from "@/models/userModel";
 import { hashToken, createOpaqueToken } from "@/utils/crypto.util";
 import { getPublicUser } from "@/utils/auth.util";
+import { getEpochDate, getFutureDate, getNowDate } from "@/utils/date.util";
 
 export const SESSION_COOKIE_NAME = "feedback_session";
 const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 7;
@@ -25,7 +26,7 @@ export async function createSessionForUser(userId) {
   await connectDB();
 
   const token = createOpaqueToken();
-  const expiresAt = new Date(Date.now() + SESSION_MAX_AGE_MS);
+  const expiresAt = getFutureDate(SESSION_MAX_AGE_MS);
 
   await Session.create({
     userId,
@@ -48,7 +49,7 @@ export function applySessionCookie(response, session) {
 
 export function clearSessionCookie(response) {
   response.cookies.set({
-    ...getSessionCookieOptions(new Date(0)),
+    ...getSessionCookieOptions(getEpochDate()),
     value: "",
   });
 }
@@ -64,7 +65,7 @@ export async function setSessionCookie(session) {
 export async function removeSessionCookie() {
   const cookieStore = await cookies();
   cookieStore.set({
-    ...getSessionCookieOptions(new Date(0)),
+    ...getSessionCookieOptions(getEpochDate()),
     value: "",
   });
 }
@@ -92,7 +93,7 @@ export async function getCurrentSessionFromToken(token) {
 
   const session = await Session.findOne({
     tokenHash: hashToken(token),
-    expiresAt: { $gt: new Date() },
+    expiresAt: { $gt: getNowDate() },
   }).lean();
 
   if (!session) {

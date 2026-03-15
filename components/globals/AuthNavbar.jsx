@@ -9,8 +9,13 @@ import styles from "@/css/globals/AuthNavbar.module.css";
 export default function AuthNavbar({ user }) {
   const [open, setOpen] = useState(false);
   const navItems = [
-    { label: "Home", altLabel: "Start", href: "/" },
-    { label: "Feedback", altLabel: "Reviews", href: "/#feedbacks" },
+    {
+      label: "Home",
+      altLabel: "Start",
+      href: "https://sheryians.com/",
+      external: true,
+    },
+    { label: "Feedback", altLabel: "Reviews", href: "/" },
     ...(user?.role === "admin"
       ? [{ label: "Admin", altLabel: "Control", href: "/admin" }]
       : []),
@@ -37,18 +42,38 @@ export default function AuthNavbar({ user }) {
           <ul className={styles.pages}>
             {navItems.map((item) => (
               <li key={item.label}>
-                <Link className={styles.link} href={item.href}>
-                  {item.altLabel ? (
-                    <span className={`${styles.textSwap} ${styles.navSwap}`}>
-                      <span className={styles.textTrack}>
-                        <span className={styles.swapItem}>{item.label}</span>
-                        <span className={styles.swapItem}>{item.altLabel}</span>
+                {item.external ? (
+                  <a
+                    className={styles.link}
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {item.altLabel ? (
+                      <span className={`${styles.textSwap} ${styles.navSwap}`}>
+                        <span className={styles.textTrack}>
+                          <span className={styles.swapItem}>{item.label}</span>
+                          <span className={styles.swapItem}>{item.altLabel}</span>
+                        </span>
                       </span>
-                    </span>
-                  ) : (
-                    item.label
-                  )}
-                </Link>
+                    ) : (
+                      item.label
+                    )}
+                  </a>
+                ) : (
+                  <Link className={styles.link} href={item.href}>
+                    {item.altLabel ? (
+                      <span className={`${styles.textSwap} ${styles.navSwap}`}>
+                        <span className={styles.textTrack}>
+                          <span className={styles.swapItem}>{item.label}</span>
+                          <span className={styles.swapItem}>{item.altLabel}</span>
+                        </span>
+                      </span>
+                    ) : (
+                      item.label
+                    )}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -88,14 +113,27 @@ export default function AuthNavbar({ user }) {
         <ul className={styles.mobilePages}>
           {navItems.map((item) => (
             <li key={item.label}>
-              <Link
-                className={styles.mobileLink}
-                href={item.href}
-                onClick={() => setOpen(false)}
-              >
-                <span>{item.label}</span>
-                <span className={styles.mobileArrow}>/</span>
-              </Link>
+              {item.external ? (
+                <a
+                  className={styles.mobileLink}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => setOpen(false)}
+                >
+                  <span>{item.label}</span>
+                  <span className={styles.mobileArrow}>/</span>
+                </a>
+              ) : (
+                <Link
+                  className={styles.mobileLink}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                >
+                  <span>{item.label}</span>
+                  <span className={styles.mobileArrow}>/</span>
+                </Link>
+              )}
             </li>
           ))}
         </ul>

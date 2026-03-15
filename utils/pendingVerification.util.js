@@ -3,6 +3,7 @@ import { connectDB } from "@/config/db.congif";
 import PendingVerification from "@/models/pendingVerificationModel";
 import User from "@/models/userModel";
 import { createOpaqueToken } from "@/utils/crypto.util";
+import { getEpochDate, getFutureDate, getNowDate } from "@/utils/date.util";
 
 export const PENDING_VERIFICATION_COOKIE_NAME = "feedback_pending_verification";
 const PENDING_VERIFICATION_MAX_AGE_MS = 1000 * 60 * 60;
@@ -23,7 +24,7 @@ export async function createPendingVerificationForUser(userId) {
   await connectDB();
 
   const token = createOpaqueToken();
-  const expiresAt = new Date(Date.now() + PENDING_VERIFICATION_MAX_AGE_MS);
+  const expiresAt = getFutureDate(PENDING_VERIFICATION_MAX_AGE_MS);
 
   return {
     token,
@@ -72,7 +73,7 @@ export function applyPendingVerificationCookie(response, pendingVerification) {
 
 export function clearPendingVerificationCookie(response) {
   response.cookies.set({
-    ...getPendingVerificationCookieOptions(new Date(0)),
+    ...getPendingVerificationCookieOptions(getEpochDate()),
     value: "",
   });
 }
@@ -88,7 +89,7 @@ export async function setPendingVerificationCookie(pendingVerification) {
 export async function removePendingVerificationCookie() {
   const cookieStore = await cookies();
   cookieStore.set({
-    ...getPendingVerificationCookieOptions(new Date(0)),
+    ...getPendingVerificationCookieOptions(getEpochDate()),
     value: "",
   });
 }
@@ -116,7 +117,7 @@ export async function getPendingVerificationFromToken(token) {
 
   const pendingVerification = await PendingVerification.findOne({
     token,
-    expiresAt: { $gt: new Date() },
+    expiresAt: { $gt: getNowDate() },
   }).lean();
 
   if (!pendingVerification) {

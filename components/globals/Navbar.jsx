@@ -6,7 +6,7 @@ import Logo from '@/assets/./images/sheryians.svg';
 
 const navItems = [
   { label: 'Home', altLabel: 'Start', href: '#' },
-  { label: 'Feedback', altLabel: 'Reviews', href: '#feedbacks' },
+  { label: 'Feedback', altLabel: 'Reviews', href: '/feedback' },
 ];
 
 const Navbar = () => {

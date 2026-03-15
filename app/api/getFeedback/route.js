@@ -1,19 +1,16 @@
 import { getFeedbackController } from "@/controllers/feedback.controller";
-import { createErrorResponse, createSuccessResponse } from "@/utils/api.util";
+import { createSuccessResponse } from "@/utils/api.util";
 import { requireApiSession } from "@/utils/routeAuth.util";
+import wrapAsync from "@/utils/wrapAsync.util";
 
-export async function GET(request) {
-  try {
-    const { errorResponse } = await requireApiSession(request);
+export const GET = wrapAsync(async function GET(request) {
+  const { errorResponse } = await requireApiSession(request);
 
-    if (errorResponse) {
-      return errorResponse;
-    }
-
-    const result = await getFeedbackController();
-
-    return createSuccessResponse(result);
-  } catch (error) {
-    return createErrorResponse(error, "Failed to fetch feedbacks.");
+  if (errorResponse) {
+    return errorResponse;
   }
-}
+
+  const result = await getFeedbackController();
+
+  return createSuccessResponse(result);
+}, "Failed to fetch feedbacks.");

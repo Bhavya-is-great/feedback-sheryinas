@@ -12,11 +12,13 @@ export function createSuccessResponse(result) {
 }
 
 export function createErrorResponse(error, fallbackMessage) {
+  const status = Number(error?.status || error?.statusCode || 500);
+
   return NextResponse.json(
     {
       success: false,
       message: error.message || fallbackMessage,
     },
-    { status: 500 }
+    { status }
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import http from "@/utils/http.util";
+import { formatIstDate, isWithinIstDayRange } from "@/utils/date.util";
 import AdminHero from "@/components/admin/AdminHero";
 import AdminMetrics from "@/components/admin/AdminMetrics";
 import AdminSection from "@/components/admin/AdminSection";
@@ -17,11 +18,7 @@ const initialForm = {
 };
 
 function formatDateLabel(value) {
-  return new Intl.DateTimeFormat("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(value));
+  return formatIstDate(value);
 }
 
 export default function AdminFeedbackPage({ adminPassword }) {
@@ -61,8 +58,7 @@ export default function AdminFeedbackPage({ adminPassword }) {
 
   const metrics = useMemo(() => {
     const total = feedbacks.length;
-    const active = feedbacks.filter(({ dateEnd }) => new Date(dateEnd) >= new Date())
-      .length;
+    const active = feedbacks.filter(({ dateEnd }) => isWithinIstDayRange(dateEnd)).length;
     const batches = new Set(feedbacks.map(({ batch }) => batch)).size;
 
     return [

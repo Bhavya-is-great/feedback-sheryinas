@@ -31,6 +31,7 @@ import {
   getResetPasswordTemplate,
   getWelcomeEmailTemplate,
 } from "@/utils/emailTemplates.util";
+import { getFutureDate, getNowDate, getNowMs, getTime, isAfterNow } from "@/utils/date.util";
 
 const EMAIL_OTP_WINDOW_MS = 1000 * 60 * 60;
 const OTP_RESEND_COOLDOWN_MS = 1000 * 60;
@@ -52,17 +53,17 @@ function hasUnexpiredPendingVerification(pendingVerification) {
   return Boolean(
     pendingVerification?.otp &&
       pendingVerification?.expiresAt &&
-      new Date(pendingVerification.expiresAt) > new Date()
+      isAfterNow(pendingVerification.expiresAt)
   );
 }
 
 function getOtpResendPolicy(pendingVerification) {
-  const now = Date.now();
+  const now = getNowMs();
   const firstSentAt = pendingVerification?.firstSentAt
-    ? new Date(pendingVerification.firstSentAt).getTime()
+    ? getTime(pendingVerification.firstSentAt)
     : 0;
   const lastSentAt = pendingVerification?.lastSentAt
-    ? new Date(pendingVerification.lastSentAt).getTime()
+    ? getTime(pendingVerification.lastSentAt)
     : 0;
 
   if (!firstSentAt || now - firstSentAt >= EMAIL_OTP_WINDOW_MS) {
@@ -84,8 +85,8 @@ function getOtpResendPolicy(pendingVerification) {
 
 async function issueNewEmailOtp(user) {
   const otp = createNumericOtp();
-  const now = new Date();
-  const expiresAt = new Date(now.getTime() + EMAIL_OTP_WINDOW_MS);
+  const now = getNowDate();
+  const expiresAt = getFutureDate(EMAIL_OTP_WINDOW_MS);
   const pendingVerification = await savePendingVerificationForUser(user._id, {
     otp,
     expiresAt,
@@ -122,7 +123,7 @@ async function resendEmailOtp(user) {
       };
     }
 
-    const now = new Date();
+    const now = getNowDate();
     const nextFirstSentAt = pendingVerification.firstSentAt || pendingVerification.lastSentAt || now;
     const nextResendCount = Number(pendingVerification.resendCount || 0) + 1;
 
@@ -206,8 +207,7 @@ export async function signupController(payload) {
       },
       pendingVerification,
     };
-  } catch (error) {
-    console.error("Failed to send verification OTP:", error);
+  } catch {
     await User.deleteOne({ _id: user._id });
 
     return {
@@ -278,8 +278,7 @@ export async function loginController(payload) {
           },
           pendingVerification: nextPendingVerification,
         };
-      } catch (error) {
-        console.error("Failed to send verification OTP:", error);
+      } catch {
         return {
           success: false,
           status: 500,
@@ -348,7 +347,7 @@ export async function verifyOtpController(payload) {
     };
   }
 
-  if (!pendingVerification || !pendingVerification.otp || pendingVerification.expiresAt <= new Date()) {
+  if (!pendingVerification || !pendingVerification.otp || pendingVerification.expiresAt <= getNowDate()) {
     return {
       success: false,
       status: 400,
@@ -376,8 +375,7 @@ export async function verifyOtpController(payload) {
       to: user.email,
       ...welcomeEmail,
     });
-  } catch (error) {
-    console.error("Failed to send welcome email:", error);
+  } catch {
   }
 
   return {
@@ -428,8 +426,7 @@ export async function resendOtpController(payload) {
           : null,
       };
     }
-  } catch (error) {
-    console.error("Failed to resend verification OTP:", error);
+  } catch {
     return {
       success: false,
       status: 500,
@@ -480,7 +477,7 @@ export async function forgotPasswordController(payload, origin) {
 
   if (user) {
     const resetToken = createOpaqueToken();
-    const resetPasswordExpiresAt = new Date(Date.now() + 1000 * 60 * 15);
+    const resetPasswordExpiresAt = getFutureDate(1000 * 60 * 15);
 
     user.resetPasswordTokenHash = hashToken(resetToken);
     user.resetPasswordExpiresAt = resetPasswordExpiresAt;
@@ -521,7 +518,7 @@ export async function resetPasswordController(payload) {
 
   const user = await User.findOne({
     resetPasswordTokenHash: hashToken(payload.token),
-    resetPasswordExpiresAt: { $gt: new Date() },
+    resetPasswordExpiresAt: { $gt: getNowDate() },
   });
 
   if (!user) {

@@ -1,10 +1,12 @@
+import { createDate, getIstDayEndMs, getIstDayStartMs, getNowMs, hasIstDayStarted, isWithinIstDayRange } from "@/utils/date.util";
+
 export function validateFeedbackPayload({ title, batch, dateStart, dateEnd }) {
   if (!title || !batch || !dateStart || !dateEnd) {
     return "title, batch, dateStart and dateEnd are required.";
   }
 
-  const start = new Date(dateStart);
-  const end = new Date(dateEnd);
+  const start = createDate(dateStart);
+  const end = createDate(dateEnd);
 
   if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
     return "dateStart and dateEnd must be valid dates.";
@@ -27,8 +29,16 @@ export function buildCreateFeedbackPayload(payload) {
 }
 
 export function sortFeedbacksByDateStartDesc(feedbacks = []) {
-  return [...feedbacks].sort(
-    (left, right) =>
-      new Date(right.dateStart).getTime() - new Date(left.dateStart).getTime()
-  );
+  return [...feedbacks]
+    .filter((feedback) => hasIstDayStarted(feedback.dateStart))
+    .sort((left, right) => {
+      const leftIsActive = isWithinIstDayRange(left.dateEnd);
+      const rightIsActive = isWithinIstDayRange(right.dateEnd);
+
+      if (leftIsActive !== rightIsActive) {
+        return leftIsActive ? -1 : 1;
+      }
+
+      return getIstDayStartMs(right.dateStart) - getIstDayStartMs(left.dateStart);
+    });
 }

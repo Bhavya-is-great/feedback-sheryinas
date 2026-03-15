@@ -1,20 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import http from "@/utils/http.util";
+import { formatIstDate, isWithinIstDayRange } from "@/utils/date.util";
 import { sortFeedbacksByDateStartDesc } from "@/utils/feedback.util";
 import styles from "@/css/home/Feedbacks.module.css";
 
 function formatDate(value) {
-  return new Intl.DateTimeFormat("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(value));
+  return formatIstDate(value);
 }
 
 function getStatus(dateEnd) {
-  return new Date(dateEnd) >= new Date() ? "Active" : "Closed";
+  return isWithinIstDayRange(dateEnd) ? "Active" : "Closed";
 }
 
 export default function Feedbacks() {
@@ -77,43 +75,49 @@ export default function Feedbacks() {
             const isActive = status === "Active";
 
             return (
-              <article key={item._id ?? item.id} className={styles.feedback}>
-                <div className={styles.cardTop}>
-                  <span className={styles.cardIndex}>
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span
-                    className={`${styles.badge} ${
-                      isActive ? styles.active : styles.completed
-                    }`}
-                  >
-                    {status}
-                  </span>
-                </div>
-
-                <h2 className={styles.cardTitle}>{item.title}</h2>
-
-                <div className={styles.metaGrid}>
-                  <div className={styles.metaBlock}>
-                    <span className={styles.metaLabel}>Batch</span>
-                    <span className={styles.metaValue}>{item.batch}</span>
-                  </div>
-
-                  <div className={styles.metaBlock}>
-                    <span className={styles.metaLabel}>Date Start</span>
-                    <span className={styles.metaValue}>
-                      {formatDate(item.dateStart)}
+              <Link
+                key={item._id ?? item.id}
+                href={`/feedback?feedbackId=${encodeURIComponent(item._id ?? item.id)}`}
+                className={styles.feedbackLink}
+              >
+                <article className={styles.feedback}>
+                  <div className={styles.cardTop}>
+                    <span className={styles.cardIndex}>
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className={`${styles.badge} ${
+                        isActive ? styles.active : styles.completed
+                      }`}
+                    >
+                      {status}
                     </span>
                   </div>
 
-                  <div className={styles.metaBlock}>
-                    <span className={styles.metaLabel}>Date End</span>
-                    <span className={styles.metaValue}>
-                      {formatDate(item.dateEnd)}
-                    </span>
+                  <h2 className={styles.cardTitle}>{item.title}</h2>
+
+                  <div className={styles.metaGrid}>
+                    <div className={styles.metaBlock}>
+                      <span className={styles.metaLabel}>Batch</span>
+                      <span className={styles.metaValue}>{item.batch}</span>
+                    </div>
+
+                    <div className={styles.metaBlock}>
+                      <span className={styles.metaLabel}>Date Start</span>
+                      <span className={styles.metaValue}>
+                        {formatDate(item.dateStart)}
+                      </span>
+                    </div>
+
+                    <div className={styles.metaBlock}>
+                      <span className={styles.metaLabel}>Date End</span>
+                      <span className={styles.metaValue}>
+                        {formatDate(item.dateEnd)}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
+              </Link>
             );
           })}
         </div>

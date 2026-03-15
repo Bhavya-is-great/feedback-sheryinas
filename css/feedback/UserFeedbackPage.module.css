@@ -1,0 +1,301 @@
+.page {
+  min-height: calc(100vh - 110px);
+  padding: 0 1.5rem 2rem;
+}
+
+.shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.8fr);
+  gap: 1rem;
+}
+
+.copy,
+.actions,
+.notice {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.8rem;
+  background:
+    radial-gradient(circle at top left, rgba(227, 89, 39, 0.18), transparent 45%),
+    rgba(7, 7, 7, 0.86);
+  backdrop-filter: blur(16px);
+}
+
+.copy {
+  padding: 1.8rem;
+}
+
+.heroSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.eyebrow {
+  color: rgba(255, 255, 255, 0.56);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.72rem;
+  margin-bottom: 0.9rem;
+}
+
+.title {
+  color: #fff7f1;
+  font-family: neue;
+  font-size: clamp(2.3rem, 5vw, 4.4rem);
+  line-height: 0.92;
+  max-width: 12ch;
+  margin-bottom: 0.9rem;
+}
+
+.skeletonEyebrow,
+.skeletonTitle,
+.skeletonPill,
+.metricSkeleton,
+.buttonSkeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.skeletonEyebrow::after,
+.skeletonTitle::after,
+.skeletonPill::after,
+.metricSkeleton::after,
+.buttonSkeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  animation: shimmer 1.3s ease-in-out infinite;
+}
+
+.skeletonEyebrow {
+  width: 8.5rem;
+  height: 0.8rem;
+  border-radius: 999px;
+}
+
+.skeletonTitle {
+  width: min(100%, 31rem);
+  height: clamp(2.6rem, 6vw, 4.8rem);
+  border-radius: 1rem;
+}
+
+.skeletonTitleShort {
+  width: min(68%, 18rem);
+}
+
+.skeletonMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.15rem;
+}
+
+.skeletonPill {
+  width: 7rem;
+  height: 2.55rem;
+  border-radius: 999px;
+}
+
+.skeletonPillWide {
+  width: min(100%, 16rem);
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.metaPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.7rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 0.88rem;
+}
+
+.actions {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1.2rem;
+  align-content: start;
+}
+
+.metric {
+  padding: 1.1rem 1.15rem;
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.metricSkeleton {
+  min-height: 6.4rem;
+}
+
+.metricLabel {
+  display: block;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.8rem;
+  margin-bottom: 0.45rem;
+}
+
+.metricValue {
+  color: #fff7f1;
+  font-family: neue;
+  font-size: 2.2rem;
+}
+
+.createButton {
+  border: 0;
+  border-radius: 999px;
+  padding: 1rem 1.2rem;
+  background: linear-gradient(135deg, #e35927, #ff8a4c);
+  color: #190a02;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.buttonSkeleton {
+  min-height: 3.5rem;
+  border-radius: 999px;
+}
+
+.createButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+.notice {
+  padding: 1rem 1.2rem;
+}
+
+.myFeedbackSection {
+  display: grid;
+  gap: 1rem;
+}
+
+.noticeLabel {
+  display: inline-flex;
+  margin-bottom: 0.5rem;
+  color: #ffaf86;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.notice p {
+  color: rgba(255, 255, 255, 0.76);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.myFeedbackCard {
+  padding: 1.25rem;
+  border-radius: 1.6rem;
+  border: 1px solid rgba(227, 89, 39, 0.2);
+  background:
+    radial-gradient(circle at top left, rgba(227, 89, 39, 0.12), transparent 42%),
+    rgba(10, 10, 10, 0.92);
+}
+
+.myFeedbackTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.95rem;
+}
+
+.myFeedbackName {
+  margin: 0 0 0.3rem;
+  color: #fff6ef;
+  font-family: neue;
+  font-size: 1.35rem;
+  line-height: 1.05;
+}
+
+.myFeedbackDate {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.myFeedbackBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(227, 89, 39, 0.28);
+  background: rgba(227, 89, 39, 0.12);
+  color: #ffb18a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.myFeedbackMessage {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 0 0.75rem 1.5rem;
+  }
+
+  .copy,
+  .actions,
+  .notice {
+    border-radius: 1.35rem;
+  }
+
+  .copy {
+    padding: 1.25rem;
+  }
+
+  .title {
+    max-width: 100%;
+  }
+
+  .myFeedbackTop {
+    flex-direction: column;
+  }
+
+  .skeletonTitle,
+  .skeletonTitleShort,
+  .skeletonPillWide {
+    width: 100%;
+  }
+}

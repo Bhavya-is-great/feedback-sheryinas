@@ -1,19 +1,17 @@
-import { createFeedbackController } from "@/controllers/feedback.controller";
+import { toggleFeedbackLikeController } from "@/controllers/userFeedback.controller";
 import { createSuccessResponse } from "@/utils/api.util";
 import { requireApiSession } from "@/utils/routeAuth.util";
 import wrapAsync from "@/utils/wrapAsync.util";
 
 export const POST = wrapAsync(async function POST(request) {
-  const { errorResponse } = await requireApiSession(request, {
-    adminOnly: true,
-  });
+  const { session, errorResponse } = await requireApiSession(request);
 
   if (errorResponse) {
     return errorResponse;
   }
 
   const body = await request.json();
-  const result = await createFeedbackController(body);
+  const result = await toggleFeedbackLikeController(body, session.user);
 
   return createSuccessResponse(result);
-}, "Failed to create feedback.");
+}, "Failed to update feedback like.");

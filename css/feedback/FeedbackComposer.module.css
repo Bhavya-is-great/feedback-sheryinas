@@ -1,0 +1,109 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.54);
+  backdrop-filter: blur(14px);
+}
+
+.modal {
+  width: min(720px, 100%);
+  padding: 1.35rem;
+  border-radius: 1.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    radial-gradient(circle at top, rgba(227, 89, 39, 0.18), transparent 48%),
+    rgba(8, 8, 8, 0.96);
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  color: rgba(255, 255, 255, 0.56);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  margin-bottom: 0.4rem;
+}
+
+.title {
+  color: #fff7f1;
+  font-family: neue;
+  font-size: 2.1rem;
+  margin: 0;
+}
+
+.close {
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff7f1;
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.label {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.88rem;
+}
+
+.textarea {
+  min-height: 240px;
+  padding: 1rem 1.05rem;
+  border-radius: 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.34);
+  color: #fff7f1;
+  resize: vertical;
+  outline: none;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.hint {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .modal {
+    padding: 1rem;
+    border-radius: 1.35rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
