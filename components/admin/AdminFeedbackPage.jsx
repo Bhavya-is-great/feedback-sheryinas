@@ -34,7 +34,7 @@ export default function AdminFeedbackPage({ adminPassword }) {
       setError("");
       setIsLoading(true);
 
-      const { data } = await http.get("/api/getFeedback", {
+      const { data } = await http.get("/api/getFeedback?includeAll=true", {
         headers: {
           "Cache-Control": "no-store",
         },
@@ -147,3 +147,4 @@ export default function AdminFeedbackPage({ adminPassword }) {
     </main>
   );
 }
+

@@ -16,6 +16,12 @@ export default function AuthNavbar({ user }) {
       external: true,
     },
     { label: "Feedback", altLabel: "Reviews", href: "/" },
+    {
+      label: "WorkDir",
+      altLabel: "Learn",
+      href: "https://learn.sheryians.com/",
+      external: true,
+    },
     ...(user?.role === "admin"
       ? [{ label: "Admin", altLabel: "Control", href: "/admin" }]
       : []),

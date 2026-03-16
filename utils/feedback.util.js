@@ -28,9 +28,11 @@ export function buildCreateFeedbackPayload(payload) {
   };
 }
 
-export function sortFeedbacksByDateStartDesc(feedbacks = []) {
+export function sortFeedbacksByDateStartDesc(feedbacks = [], options = {}) {
+  const { includeFuture = false } = options;
+
   return [...feedbacks]
-    .filter((feedback) => hasIstDayStarted(feedback.dateStart))
+    .filter((feedback) => includeFuture || hasIstDayStarted(feedback.dateStart))
     .sort((left, right) => {
       const leftIsActive = isWithinIstDayRange(left.dateEnd);
       const rightIsActive = isWithinIstDayRange(right.dateEnd);

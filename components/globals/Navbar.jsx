@@ -7,6 +7,12 @@ import Logo from '@/assets/./images/sheryians.svg';
 const navItems = [
   { label: 'Home', altLabel: 'Start', href: '#' },
   { label: 'Feedback', altLabel: 'Reviews', href: '/feedback' },
+  {
+    label: 'WorkDir',
+    altLabel: 'Learn',
+    href: 'https://learn.sheryians.com/',
+    external: true,
+  },
 ];
 
 const Navbar = () => {
@@ -38,7 +44,12 @@ const Navbar = () => {
           <ul className={styles.pages}>
             {navItems.map((item) => (
               <li key={item.label}>
-                <a className={styles.link} href={item.href}>
+                <a
+                  className={styles.link}
+                  href={item.href}
+                  target={item.external ? '_blank' : undefined}
+                  rel={item.external ? 'noreferrer' : undefined}
+                >
                   {item.altLabel ? (
                     <span className={`${styles.textSwap} ${styles.navSwap}`}>
                       <span className={styles.textTrack}>
@@ -84,7 +95,13 @@ const Navbar = () => {
         <ul className={styles.mobilePages}>
           {navItems.map((item) => (
             <li key={item.label}>
-              <a className={styles.mobileLink} href={item.href} onClick={() => setOpen(false)}>
+              <a
+                className={styles.mobileLink}
+                href={item.href}
+                target={item.external ? '_blank' : undefined}
+                rel={item.external ? 'noreferrer' : undefined}
+                onClick={() => setOpen(false)}
+              >
                 <span>{item.label}</span>
                 <span className={styles.mobileArrow}>/</span>
               </a>

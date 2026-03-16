@@ -76,6 +76,7 @@ export default function SignupForm() {
         placeholder="8+ chars, Aa1@ required"
         autoComplete="new-password"
         disabled={isSubmitting}
+        enablePasswordToggle
       />
       <AuthField
         label="Confirm Password"
@@ -86,6 +87,7 @@ export default function SignupForm() {
         placeholder="Repeat your password"
         autoComplete="new-password"
         disabled={isSubmitting}
+        enablePasswordToggle
       />
       <AuthButton type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Creating..." : "Create Account"}

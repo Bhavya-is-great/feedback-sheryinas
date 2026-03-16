@@ -72,6 +72,7 @@ export default function LoginForm() {
         placeholder="Enter your password"
         autoComplete="current-password"
         disabled={isSubmitting}
+        enablePasswordToggle
       />
       <AuthButton type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Logging in..." : "Log In"}

@@ -13,6 +13,8 @@
     background: rgba(7, 7, 7, 0.72);
     backdrop-filter: blur(18px);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .brand {
@@ -172,9 +174,11 @@
 
 .mobilePanel {
     display: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1100px) {
     .nav {
         top: 0.75rem;
         margin: 0.75rem 0.75rem 1.1rem;

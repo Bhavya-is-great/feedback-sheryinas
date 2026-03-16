@@ -26,7 +26,7 @@ export async function createFeedbackController(payload) {
   };
 }
 
-export async function getFeedbackController() {
+export async function getFeedbackController(options = {}) {
   await connectDB();
 
   const feedbacks = await Feedback.find({});
@@ -34,6 +34,6 @@ export async function getFeedbackController() {
   return {
     success: true,
     status: 200,
-    data: sortFeedbacksByDateStartDesc(feedbacks),
+    data: sortFeedbacksByDateStartDesc(feedbacks, options),
   };
 }
