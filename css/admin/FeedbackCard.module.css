@@ -7,12 +7,23 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.cardEditing {
+  border-color: rgba(227, 89, 39, 0.62);
+  box-shadow: 0 0 0 1px rgba(227, 89, 39, 0.18);
+}
+
 .top {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .batch {
@@ -27,6 +38,18 @@
   border: 1px solid rgba(227, 89, 39, 0.42);
   color: #ffcfbf;
   font-size: 0.78rem;
+}
+
+.editButton {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.88);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
 }
 
 .title {
@@ -59,6 +82,16 @@
 }
 
 @media (max-width: 520px) {
+  .top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .topActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .meta {
     grid-template-columns: 1fr;
   }

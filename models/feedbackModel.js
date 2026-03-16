@@ -20,6 +20,10 @@ const feedbackSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    isAnonymous: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

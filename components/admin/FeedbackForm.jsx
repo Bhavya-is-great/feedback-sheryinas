@@ -8,7 +8,10 @@ export default function FeedbackForm({
   isSubmitting,
   onChange,
   onSubmit,
+  onCancelEdit,
 }) {
+  const isEditing = Boolean(form.feedbackId);
+
   return (
     <form className={styles.form} onSubmit={onSubmit}>
       <FormField
@@ -45,15 +48,43 @@ export default function FeedbackForm({
         />
       </div>
 
+      <label className={styles.toggleRow}>
+        <span>
+          <strong className={styles.toggleTitle}>Anonymous Mode</strong>
+          <small className={styles.toggleHint}>
+            When this is on, feedback cards will show User instead of the saved name.
+          </small>
+        </span>
+        <input
+          type="checkbox"
+          name="isAnonymous"
+          checked={Boolean(form.isAnonymous)}
+          onChange={onChange}
+          className={styles.toggleInput}
+        />
+      </label>
+
       {(error || success) && (
         <p className={error ? styles.error : styles.success}>
           {error || success}
         </p>
       )}
 
-      <button className={styles.button} type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Saving..." : "Save Feedback"}
-      </button>
+      <div className={styles.actions}>
+        <button className={styles.button} type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Saving..." : isEditing ? "Update Feedback" : "Save Feedback"}
+        </button>
+        {isEditing ? (
+          <button
+            className={styles.secondaryButton}
+            type="button"
+            onClick={onCancelEdit}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </button>
+        ) : null}
+      </div>
     </form>
   );
 }

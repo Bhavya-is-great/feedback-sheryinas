@@ -10,10 +10,31 @@ import FeedbackForm from "@/components/admin/FeedbackForm";
 import FeedbackList from "@/components/admin/FeedbackList";
 import styles from "@/css/admin/AdminFeedbackPage.module.css";
 
-const initialForm = { title: "", batch: "", dateStart: "", dateEnd: "" };
+const initialForm = {
+  feedbackId: "",
+  title: "",
+  batch: "",
+  dateStart: "",
+  dateEnd: "",
+  isAnonymous: false,
+};
 
 function formatDateLabel(value) {
   return formatIstDate(value);
+}
+
+function formatDateInputValue(value) {
+  if (!value) {
+    return "";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return date.toISOString().slice(0, 10);
 }
 
 export default function AdminDashboardPage() {
@@ -28,7 +49,7 @@ export default function AdminDashboardPage() {
     try {
       setError("");
       setIsLoading(true);
-      const { data } = await http.get("/api/getFeedback");
+      const { data } = await http.get("/api/getFeedback?includeAll=true");
       if (!data.success) throw new Error(data.message || "Unable to load feedbacks.");
       setFeedbacks(data.data || []);
     } catch (loadError) {
@@ -57,15 +78,36 @@ export default function AdminDashboardPage() {
     () =>
       feedbacks.map((item) => ({
         ...item,
+        feedbackId: item._id || item.id || "",
         dateStartLabel: formatDateLabel(item.dateStart),
         dateEndLabel: formatDateLabel(item.dateEnd),
+        anonymityLabel: item.isAnonymous ? "Anonymous" : "Named",
       })),
     [feedbacks]
   );
 
   function handleChange(event) {
-    const { name, value } = event.target;
-    setForm((current) => ({ ...current, [name]: value }));
+    const { name, type, value, checked } = event.target;
+    setForm((current) => ({ ...current, [name]: type === "checkbox" ? checked : value }));
+  }
+
+  function handleEdit(item) {
+    setError("");
+    setSuccess("");
+    setForm({
+      feedbackId: item.feedbackId,
+      title: item.title || "",
+      batch: item.batch || "",
+      dateStart: formatDateInputValue(item.dateStart),
+      dateEnd: formatDateInputValue(item.dateEnd),
+      isAnonymous: Boolean(item.isAnonymous),
+    });
+  }
+
+  function handleCancelEdit() {
+    setError("");
+    setSuccess("");
+    setForm(initialForm);
   }
 
   async function handleSubmit(event) {
@@ -74,9 +116,16 @@ export default function AdminDashboardPage() {
     setSuccess("");
     setIsSubmitting(true);
     try {
-      const { data } = await http.post("/api/createFeedback", form);
-      if (!data.success) throw new Error(data.message || "Unable to create feedback.");
-      setSuccess("Feedback added.");
+      const isEditing = Boolean(form.feedbackId);
+      const { data } = isEditing
+        ? await http.patch("/api/createFeedback", form)
+        : await http.post("/api/createFeedback", form);
+      if (!data.success) {
+        throw new Error(
+          data.message || (isEditing ? "Unable to update feedback." : "Unable to create feedback.")
+        );
+      }
+      setSuccess(isEditing ? "Feedback updated." : "Feedback added.");
       setForm(initialForm);
       await loadFeedbacks();
     } catch (submitError) {
@@ -92,11 +141,18 @@ export default function AdminDashboardPage() {
         <AdminHero
           eyebrow="Admin Panel"
           title="Create and track feedback windows with a minimal workflow."
-          description="This panel only manages the four required fields: title, batch, date start and date end."
+          description="Create feedback windows, edit them later, and switch anonymous mode on or off without losing stored names."
         />
         <AdminMetrics items={metrics} />
         <div className={styles.grid}>
-          <AdminSection title="Add Feedback" description="Publish a new feedback window.">
+          <AdminSection
+            title={form.feedbackId ? "Edit Feedback" : "Add Feedback"}
+            description={
+              form.feedbackId
+                ? "Update the window details or change whether names stay hidden."
+                : "Publish a new feedback window."
+            }
+          >
             <FeedbackForm
               form={form}
               error={error}
@@ -104,10 +160,16 @@ export default function AdminDashboardPage() {
               isSubmitting={isSubmitting}
               onChange={handleChange}
               onSubmit={handleSubmit}
+              onCancelEdit={handleCancelEdit}
             />
           </AdminSection>
           <AdminSection title="Recent Feedbacks" description="Every saved entry from the database.">
-            <FeedbackList items={mappedFeedbacks} isLoading={isLoading} />
+            <FeedbackList
+              items={mappedFeedbacks}
+              isLoading={isLoading}
+              editingFeedbackId={form.feedbackId}
+              onEdit={handleEdit}
+            />
           </AdminSection>
         </div>
       </div>

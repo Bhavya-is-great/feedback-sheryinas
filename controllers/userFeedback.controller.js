@@ -32,13 +32,16 @@ function buildFeedbackResponse(feedback, currentUserId) {
         }
   );
   const likedByMe = normalizedLikes.some((like) => like.id === currentUserIdString);
+  const isAnonymous = Boolean(feedback.feedbackWindow?.isAnonymous ?? feedback.isAnonymous);
 
   return {
     id: String(feedback._id),
     feedbackId: String(feedback.feedbackId),
     feedbackTitle: feedback.feedbackTitle,
     authorId: String(feedback.authorId),
-    authorName: feedback.authorName,
+    authorName: isAnonymous ? "User" : feedback.authorName,
+    storedAuthorName: feedback.authorName,
+    isAnonymous,
     message: feedback.message,
     likesCount: normalizedLikes.length,
     likes: normalizedLikes,
@@ -95,8 +98,17 @@ export async function listUserFeedbacksController(currentUser, feedbackId) {
         batch: feedbackWindow.batch,
         dateStart: feedbackWindow.dateStart,
         dateEnd: feedbackWindow.dateEnd,
+        isAnonymous: Boolean(feedbackWindow.isAnonymous),
       },
-      feedbacks: feedbacks.map((feedback) => buildFeedbackResponse(feedback, currentUser.id)),
+      feedbacks: feedbacks.map((feedback) =>
+        buildFeedbackResponse(
+          {
+            ...feedback,
+            feedbackWindow,
+          },
+          currentUser.id
+        )
+      ),
       currentUserFeedbackId:
         feedbacks.find((feedback) => String(feedback.authorId) === String(currentUser.id))?._id ??
         null,
@@ -156,7 +168,13 @@ export async function createUserFeedbackController(payload, currentUser) {
     success: true,
     status: 201,
     message: "Feedback shared successfully.",
-    data: buildFeedbackResponse(feedback.toObject(), currentUser.id),
+    data: buildFeedbackResponse(
+      {
+        ...feedback.toObject(),
+        feedbackWindow,
+      },
+      currentUser.id
+    ),
   };
 }
 
@@ -210,7 +228,13 @@ export async function updateUserFeedbackController(payload, currentUser) {
     success: true,
     status: 200,
     message: "Feedback updated successfully.",
-    data: buildFeedbackResponse(hydratedFeedback, currentUser.id),
+    data: buildFeedbackResponse(
+      {
+        ...hydratedFeedback,
+        feedbackWindow,
+      },
+      currentUser.id
+    ),
   };
 }
 
@@ -229,7 +253,15 @@ export async function getCurrentUserFeedbackController(currentUser, feedbackId) 
   return {
     success: true,
     status: 200,
-    data: buildFeedbackResponse(feedback, currentUser.id),
+    data: buildFeedbackResponse(
+      feedback
+        ? {
+            ...feedback,
+            feedbackWindow,
+          }
+        : null,
+      currentUser.id
+    ),
   };
 }
 
@@ -263,11 +295,18 @@ export async function toggleFeedbackLikeController(payload, currentUser) {
   const hydratedFeedback = await UserFeedback.findById(feedback._id)
     .populate("likes", "name")
     .lean();
+  const feedbackWindow = await getFeedbackWindowOrThrow(feedback.feedbackId);
 
   return {
     success: true,
     status: 200,
     message: alreadyLiked ? "Like removed." : "Feedback liked.",
-    data: buildFeedbackResponse(hydratedFeedback, currentUser.id),
+    data: buildFeedbackResponse(
+      {
+        ...hydratedFeedback,
+        feedbackWindow,
+      },
+      currentUser.id
+    ),
   };
 }

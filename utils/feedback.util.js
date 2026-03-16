@@ -19,12 +19,22 @@ export function validateFeedbackPayload({ title, batch, dateStart, dateEnd }) {
   return null;
 }
 
+export function normalizeAnonymousValue(value) {
+  if (typeof value === "string") {
+    const normalizedValue = value.trim().toLowerCase();
+    return normalizedValue === "true" || normalizedValue === "on" || normalizedValue === "1";
+  }
+
+  return Boolean(value);
+}
+
 export function buildCreateFeedbackPayload(payload) {
   return {
     title: payload.title,
     batch: payload.batch,
     dateStart: payload.dateStart,
     dateEnd: payload.dateEnd,
+    isAnonymous: normalizeAnonymousValue(payload.isAnonymous),
   };
 }
 

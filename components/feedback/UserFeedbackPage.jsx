@@ -243,6 +243,9 @@ export default function UserFeedbackPage({ feedbackId = "", currentUser = null }
                     <span className={styles.metaPill}>
                       {formatDate(feedbackWindow.dateStart)} to {formatDate(feedbackWindow.dateEnd)}
                     </span>
+                    {feedbackWindow.isAnonymous ? (
+                      <span className={styles.metaPill}>Anonymous names hidden</span>
+                    ) : null}
                   </div>
                 ) : null}
               </>

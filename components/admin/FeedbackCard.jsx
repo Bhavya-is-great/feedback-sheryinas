@@ -1,11 +1,16 @@
 import styles from "@/css/admin/FeedbackCard.module.css";
 
-export default function FeedbackCard({ item }) {
+export default function FeedbackCard({ item, isEditing = false, onEdit }) {
   return (
-    <article className={styles.card}>
+    <article className={`${styles.card} ${isEditing ? styles.cardEditing : ""}`}>
       <div className={styles.top}>
         <span className={styles.batch}>{item.batch}</span>
-        <span className={styles.badge}>Saved</span>
+        <div className={styles.topActions}>
+          <span className={styles.badge}>{item.anonymityLabel}</span>
+          <button type="button" className={styles.editButton} onClick={() => onEdit?.(item)}>
+            Edit
+          </button>
+        </div>
       </div>
 
       <h3 className={styles.title}>{item.title}</h3>

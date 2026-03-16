@@ -26,6 +26,41 @@ export async function createFeedbackController(payload) {
   };
 }
 
+export async function updateFeedbackController(feedbackId, payload) {
+  const normalizedFeedbackId = String(feedbackId || "").trim();
+  const validationError = validateFeedbackPayload(payload);
+
+  if (!normalizedFeedbackId) {
+    throw new ExpressError(400, "feedbackId is required.");
+  }
+
+  if (validationError) {
+    throw new ExpressError(400, validationError);
+  }
+
+  await connectDB();
+
+  const feedback = await Feedback.findByIdAndUpdate(
+    normalizedFeedbackId,
+    buildCreateFeedbackPayload(payload),
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!feedback) {
+    throw new ExpressError(404, "Feedback window not found.");
+  }
+
+  return {
+    success: true,
+    status: 200,
+    message: "Feedback updated successfully.",
+    data: feedback,
+  };
+}
+
 export async function getFeedbackController(options = {}) {
   await connectDB();
 
