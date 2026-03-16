@@ -7,6 +7,7 @@
 .inputWrap {
   position: relative;
   display: block;
+  width: 100%;
 }
 
 .label {
@@ -16,6 +17,8 @@
 }
 
 .input {
+  width: 100%;
+  box-sizing: border-box;
   padding: 0.95rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 1rem;
